@@ -4,6 +4,8 @@ import * as AdminJSExpress from '@adminjs/express';
 import { Database, Resource } from '@adminjs/typeorm';
 import express from 'express';
 import { AppDataSource } from '../core/functions/data-source.js';
+import { adminResources } from './admin.resources.js';
+import { adminOptions } from './admin.options.js';
 
 AdminJS.registerAdapter({ Database, Resource });
 
@@ -16,10 +18,10 @@ export async function setupAdmin(appExpress: express.Express) {
     if (!AppDataSource.isInitialized) {
         await AppDataSource.initialize();
     }
-
     const admin = new AdminJS({
+        ...adminOptions,
+        resources: adminResources,
         databases: [AppDataSource],
-        rootPath: '/admin'
     });
 
     const router = AdminJSExpress.buildAuthenticatedRouter(
