@@ -3,33 +3,55 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 
 @Entity('payments')
 export class Payment extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id!: number;
 
-    @Column({ name: 'paid_amount', type: 'decimal', precision: 18, scale: 2 })
-    paidAmount!: number;
+    @ManyToOne(() => require('../users/user.entity.js').User, (u: any) => u.payments, {
+        eager: true,
+        onDelete: 'CASCADE',
+    })
+    @JoinColumn({ name: 'payer_id' })
+    payer!: any;
 
-    @Column({ name: 'paid_date', type: 'date' })
-    paidDate!: Date;
+    @ManyToOne(
+        () => require('../plans/subscription.entity.js').Subscription,
+        { eager: true, onDelete: 'SET NULL' },
+    )
+    @JoinColumn({ name: 'subscription_id' })
+    subscription?: any;
+
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    amount!: number;
+
+    @Column({ length: 10, default: 'USD' })
+    currency!: string;
+
+    @Column({
+        type: 'enum',
+        enum: ['pending', 'completed', 'failed', 'refunded'],
+        default: 'pending',
+    })
+    status!: 'pending' | 'completed' | 'failed' | 'refunded';
 
     @Column({ name: 'payment_method', length: 50, nullable: true })
     paymentMethod?: string;
 
-    @Column({ length: 255, nullable: true })
-    reference?: string;
+    @Column({ name: 'transaction_ref', length: 255, nullable: true })
+    transactionRef?: string;
 
-    @Column({ name: 'extra', type: 'json', nullable: true })
-    extra?: Record<string, any>;
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt!: Date;
 
-    @ManyToOne('documents', (doc: any) => doc.payments, { onDelete: 'CASCADE' })
-    document!: any;
-
-    @ManyToOne('installments', (inst: any) => inst.payments, { onDelete: 'SET NULL' })
-    installment?: any;
+    @OneToMany(() => require('./paymentItem.entity.js').PaymentItem, (pi: any) => pi.payment)
+    items!: any[];
 }

@@ -1,113 +1,266 @@
 import { ResourceWithOptions } from 'adminjs';
 import {
-    PerceptionCatalog,
-    TaxCatalog,
-    DetractionCatalog,
-    Company,
-    Establishment,
-    Customer,
-    Series,
-    Document,
-    DocumentItem,
-    DocumentTax,
-    DocumentLegend,
-    DocumentRelated,
-    DocumentPerception,
-    DocumentDetraction,
-    DocumentRetention,
-    DocumentStatus,
-    DocumentLog,
-    DocumentFile,
-    DocumentAllowanceCharge,
-    ItemAllowanceCharge,
-    ShippingGuide,
-    ShippingDetail,
+    Bundle,
+    BundleItem,
+    Course,
+    CourseClass,
+    CourseMaterial,
+    Event,
+    EventRegistration,
+    Notification,
     Payment,
-    Anticipation,
-    DocumentAnticipation,
-    Installment,
-    DailySummary,
-    DailySummaryItem,
-    VoidCommunication,
-    VoidCommunicationItem,
-    DocumentAuditLog,
-    Tax,
-    DetractionRule,
-    Currency,
-    SendAttempt,
-    SunatResponse,
-    CreditNoteReason,
+    PaymentItem,
+    Plan,
+    PlanEntitlement,
+    Referral,
+    ReferralCommission,
+    ReferralConfig,
+    ReferralPolicy,
+    ReferralSlot,
+    PurchaseEntitlement,
+    Role,
+    School,
+    Subscription,
+    SubscriptionEntitlement,
+    User,
+    UserNotificationSetting,
+    UserRole,
 } from '../core/entities/index.js';
 
 // ==========================================
-// 🧩 Agrupación de recursos por módulo (en español)
+// 🧩 Agrupación de recursos por módulo
 // ==========================================
 export const adminResources: ResourceWithOptions[] = [
     // =======================
-    // 📚 CATÁLOGOS BASE
+    // 👤 USUARIOS Y ROLES
     // =======================
     {
-        resource: PerceptionCatalog,
-        options: { navigation: { name: 'Catálogos Base' }, listProperties: ['code', 'description', 'active'] },
+        resource: User,
+        options: {
+            navigation: { name: 'Usuarios y Roles', icon: 'User' },
+            listProperties: ['id', 'name', 'email', 'isActive', 'createdAt'],
+            properties: { password: { type: 'password' } },
+            titleProperty: 'name',
+        },
     },
-    { resource: TaxCatalog, options: { navigation: { name: 'Catálogos Base' } } },
-    { resource: DetractionCatalog, options: { navigation: { name: 'Catálogos Base' } } },
+    {
+        resource: Role,
+        options: {
+            navigation: { name: 'Usuarios y Roles', icon: 'Shield' },
+            listProperties: ['id', 'name', 'description', 'createdAt'],
+            titleProperty: 'name',
+        },
+    },
+    {
+        resource: UserRole,
+        options: {
+            navigation: { name: 'Usuarios y Roles', icon: 'Users' },
+            listProperties: ['user', 'role'],
+            titleProperty: 'user',
+        },
+    },
+    {
+        resource: UserNotificationSetting,
+        options: {
+            navigation: { name: 'Usuarios y Roles', icon: 'Bell' },
+            listProperties: ['user', 'emailEnabled', 'pushEnabled'],
+            titleProperty: 'user',
+        },
+    },
 
     // =======================
-    // 🏢 CORE
+    // 🏫 ESCUELAS Y CURSOS
     // =======================
-    { resource: Company, options: { navigation: { name: 'Empresas y Clientes' } } },
-    { resource: Establishment, options: { navigation: { name: 'Empresas y Clientes' } } },
-    { resource: Customer, options: { navigation: { name: 'Empresas y Clientes' } } },
-    { resource: Series, options: { navigation: { name: 'Empresas y Clientes' } } },
+    {
+        resource: School,
+        options: {
+            navigation: { name: 'Escuelas y Cursos', icon: 'GraduationCap' },
+            listProperties: ['id', 'name', 'isActive', 'createdAt'],
+            titleProperty: 'name',
+        },
+    },
+    {
+        resource: Course,
+        options: {
+            navigation: { name: 'Escuelas y Cursos', icon: 'BookOpen' },
+            listProperties: ['id', 'title', 'price', 'isPublished', 'teacher'],
+            titleProperty: 'title',
+        },
+    },
+    {
+        resource: CourseClass,
+        options: {
+            navigation: { name: 'Escuelas y Cursos', icon: 'Video' },
+            listProperties: ['id', 'title', 'startsAt', 'durationMinutes'],
+            titleProperty: 'title',
+        },
+    },
+    {
+        resource: CourseMaterial,
+        options: {
+            navigation: { name: 'Escuelas y Cursos', icon: 'FileText' },
+            listProperties: ['id', 'title', 'type', 'url'],
+            titleProperty: 'title',
+        },
+    },
 
     // =======================
-    // 🧾 DOCUMENTOS
+    // 📦 BUNDLES
     // =======================
-    { resource: Document, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: DocumentItem, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: DocumentTax, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: DocumentLegend, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: DocumentRelated, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: CreditNoteReason, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: DocumentPerception, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: DocumentDetraction, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: DocumentRetention, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: DocumentStatus, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: DocumentLog, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: DocumentFile, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: DocumentAllowanceCharge, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: ItemAllowanceCharge, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: ShippingGuide, options: { navigation: { name: 'Documentos Electrónicos' } } },
-    { resource: ShippingDetail, options: { navigation: { name: 'Documentos Electrónicos' } } },
+    {
+        resource: Bundle,
+        options: {
+            navigation: { name: 'Bundles', icon: 'Package' },
+            listProperties: ['id', 'name', 'price', 'isActive'],
+            titleProperty: 'name',
+        },
+    },
+    {
+        resource: BundleItem,
+        options: {
+            navigation: { name: 'Bundles', icon: 'Layers' },
+            listProperties: ['bundle', 'itemType', 'school', 'course'],
+            titleProperty: 'bundle',
+        },
+    },
 
     // =======================
-    // 💳 PAGOS Y CUOTAS
+    // 💳 PLANES Y SUSCRIPCIONES
     // =======================
-    { resource: Payment, options: { navigation: { name: 'Pagos y Cuotas' } } },
-    { resource: Installment, options: { navigation: { name: 'Pagos y Cuotas' } } },
-    { resource: Anticipation, options: { navigation: { name: 'Pagos y Cuotas' } } },
-    { resource: DocumentAnticipation, options: { navigation: { name: 'Pagos y Cuotas' } } },
+    {
+        resource: Plan,
+        options: {
+            navigation: { name: 'Planes y Suscripciones', icon: 'CreditCard' },
+            listProperties: ['id', 'name', 'price', 'durationMonths', 'isActive'],
+            titleProperty: 'name',
+        },
+    },
+    {
+        resource: PlanEntitlement,
+        options: {
+            navigation: { name: 'Planes y Suscripciones', icon: 'Puzzle' },
+            listProperties: ['plan', 'targetType', 'targetId'],
+            titleProperty: 'targetType',
+        },
+    },
+    {
+        resource: Subscription,
+        options: {
+            navigation: { name: 'Planes y Suscripciones', icon: 'Repeat' },
+            listProperties: ['id', 'user', 'plan', 'startDate', 'endDate', 'isActive'],
+            titleProperty: 'id',
+        },
+    },
+    {
+        resource: SubscriptionEntitlement,
+        options: {
+            navigation: { name: 'Planes y Suscripciones', icon: 'Layers' },
+            listProperties: ['subscription', 'targetType', 'startDate', 'endDate'],
+            titleProperty: 'targetType',
+        },
+    },
 
     // =======================
-    // 🗓️ SUNAT (RESÚMENES Y BAJAS)
+    // 💰 PAGOS Y COMPRAS
     // =======================
-    { resource: DailySummary, options: { navigation: { name: 'SUNAT' } } },
-    { resource: DailySummaryItem, options: { navigation: { name: 'SUNAT' } } },
-    { resource: VoidCommunication, options: { navigation: { name: 'SUNAT' } } },
-    { resource: VoidCommunicationItem, options: { navigation: { name: 'SUNAT' } } },
+    {
+        resource: Payment,
+        options: {
+            navigation: { name: 'Pagos y Compras', icon: 'DollarSign' },
+            listProperties: ['id', 'payer', 'amount', 'status', 'createdAt'],
+            titleProperty: 'id',
+        },
+    },
+    {
+        resource: PaymentItem,
+        options: {
+            navigation: { name: 'Pagos y Compras', icon: 'ShoppingCart' },
+            listProperties: ['payment', 'itemType', 'itemId', 'lineTotal'],
+            titleProperty: 'itemType',
+        },
+    },
+    {
+        resource: PurchaseEntitlement,
+        options: {
+            navigation: { name: 'Pagos y Compras', icon: 'Gift' },
+            listProperties: ['user', 'targetType', 'targetId', 'startDate', 'endDate'],
+            titleProperty: 'targetType',
+        },
+    },
 
     // =======================
-    // 🔍 AUDITORÍA
+    // 👥 REFERIDOS
     // =======================
-    { resource: DocumentAuditLog, options: { navigation: { name: 'Auditoría' } } },
+    {
+        resource: ReferralConfig,
+        options: {
+            navigation: { name: 'Referidos', icon: 'Settings' },
+            listProperties: ['id', 'defaultMaxReferrals', 'createdAt'],
+            titleProperty: 'id',
+        },
+    },
+    {
+        resource: ReferralPolicy,
+        options: {
+            navigation: { name: 'Referidos', icon: 'Sliders' },
+            listProperties: ['id', 'scope', 'plan', 'productType', 'active'],
+            titleProperty: 'scope',
+        },
+    },
+    {
+        resource: Referral,
+        options: {
+            navigation: { name: 'Referidos', icon: 'Users' },
+            listProperties: ['referrer', 'referred', 'active', 'createdAt'],
+            titleProperty: 'referrer',
+        },
+    },
+    {
+        resource: ReferralSlot,
+        options: {
+            navigation: { name: 'Referidos', icon: 'Database' },
+            listProperties: ['user', 'maxSlots'],
+            titleProperty: 'user',
+        },
+    },
+    {
+        resource: ReferralCommission,
+        options: {
+            navigation: { name: 'Referidos', icon: 'Percent' },
+            listProperties: ['referrer', 'referred', 'commissionAmount', 'phase', 'status'],
+            titleProperty: 'referrer',
+        },
+    },
 
     // =======================
-    // ⚙️ CONFIGURACIÓN
+    // 🎥 EVENTOS
     // =======================
-    { resource: Tax, options: { navigation: { name: 'Configuración' } } },
-    { resource: DetractionRule, options: { navigation: { name: 'Configuración' } } },
-    { resource: Currency, options: { navigation: { name: 'Configuración' } } },
-    { resource: SendAttempt, options: { navigation: { name: 'Configuración' } } },
-    { resource: SunatResponse, options: { navigation: { name: 'Configuración' } } },
+    {
+        resource: Event,
+        options: {
+            navigation: { name: 'Eventos', icon: 'Calendar' },
+            listProperties: ['id', 'title', 'eventDate', 'price', 'isActive'],
+            titleProperty: 'title',
+        },
+    },
+    {
+        resource: EventRegistration,
+        options: {
+            navigation: { name: 'Eventos', icon: 'ClipboardList' },
+            listProperties: ['event', 'user', 'paymentItem', 'createdAt'],
+            titleProperty: 'event',
+        },
+    },
+
+    // =======================
+    // 🔔 NOTIFICACIONES
+    // =======================
+    {
+        resource: Notification,
+        options: {
+            navigation: { name: 'Notificaciones', icon: 'Bell' },
+            listProperties: ['user', 'type', 'title', 'isRead', 'createdAt'],
+            titleProperty: 'title',
+        },
+    },
 ];

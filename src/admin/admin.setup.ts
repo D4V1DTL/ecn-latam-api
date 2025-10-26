@@ -6,6 +6,7 @@ import express from 'express';
 import { AppDataSource } from '../core/functions/data-source.js';
 import { adminResources } from './admin.resources.js';
 import { adminOptions } from './admin.options.js';
+import { getMetadataArgsStorage } from 'typeorm';
 
 AdminJS.registerAdapter({ Database, Resource });
 
@@ -16,6 +17,7 @@ const DEFAULT_ADMIN = {
 
 export async function setupAdmin(appExpress: express.Express) {
     if (!AppDataSource.isInitialized) {
+        //console.log('🔍 Relaciones detectadas en Series:', getMetadataArgsStorage().relations.filter(r => r.target === Series));
         await AppDataSource.initialize();
     }
     const admin = new AdminJS({
