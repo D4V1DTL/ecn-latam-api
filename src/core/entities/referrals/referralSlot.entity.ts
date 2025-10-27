@@ -2,22 +2,27 @@ import {
     BaseEntity,
     Column,
     Entity,
+    PrimaryGeneratedColumn,
+    ManyToOne,
     JoinColumn,
-    OneToOne,
-    PrimaryColumn,
+    Unique,
 } from 'typeorm';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
 @Entity('referral_slots')
+@Unique(['user'])
 export class ReferralSlot extends BaseEntity {
-    @PrimaryColumn({ name: 'user_id', type: 'bigint' })
-    userId!: number;
+    @PrimaryGeneratedColumn('increment')
+    id!: number;
 
-    @Column({ name: 'max_slots', type: 'int' })
-    maxSlots!: number;
-
-    @OneToOne(() => require('../users/user.entity.js').User, { eager: true, onDelete: 'CASCADE' })
+    @ManyToOne(() => require('../users/user.entity.js').User, (user: any) => user.referralSlots, {
+        onDelete: 'CASCADE',
+        eager: true,
+    })
     @JoinColumn({ name: 'user_id' })
     user!: any;
+
+    @Column({ name: 'max_slots', type: 'int', nullable: false })
+    maxSlots!: number;
 }

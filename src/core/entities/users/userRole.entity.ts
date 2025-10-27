@@ -1,21 +1,19 @@
 import {
     BaseEntity,
-    Column,
     Entity,
-    JoinColumn,
+    PrimaryGeneratedColumn,
     ManyToOne,
-    PrimaryColumn,
+    JoinColumn,
+    Unique,
 } from 'typeorm';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
 @Entity('user_roles')
+@Unique(['user', 'role'])
 export class UserRole extends BaseEntity {
-    @PrimaryColumn({ name: 'user_id', type: 'bigint' })
-    userId!: number;
-
-    @PrimaryColumn({ name: 'role_id', type: 'bigint' })
-    roleId!: number;
+    @PrimaryGeneratedColumn('increment')
+    id!: number;
 
     @ManyToOne(() => require('../users/user.entity.js').User, (user: any) => user.userRoles, {
         onDelete: 'CASCADE',

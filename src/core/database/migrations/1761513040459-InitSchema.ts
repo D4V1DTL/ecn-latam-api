@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InitSchema1761508709374 implements MigrationInterface {
-    name = 'InitSchema1761508709374'
+export class InitSchema1761513040459 implements MigrationInterface {
+    name = 'InitSchema1761513040459'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE \`bundles\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(150) NOT NULL, \`description\` text NULL, \`price\` decimal(10,2) NOT NULL, \`is_active\` tinyint NOT NULL DEFAULT '1', \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`created_by\` int NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
@@ -24,11 +24,11 @@ export class InitSchema1761508709374 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE \`referral_commissions\` (\`id\` int NOT NULL AUTO_INCREMENT, \`period_month\` date NOT NULL, \`commission_amount\` decimal(10,2) NOT NULL, \`phase\` enum ('first_month', 'next_month') NOT NULL, \`status\` enum ('pending', 'payable', 'paid', 'canceled') NOT NULL DEFAULT 'pending', \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`referrer_id\` int NULL, \`referred_id\` int NULL, \`payment_id\` int NULL, INDEX \`idx_comm_referred_period\` (\`referred_id\`, \`period_month\`), INDEX \`idx_comm_referrer_period\` (\`referrer_id\`, \`period_month\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`referral_configs\` (\`id\` int NOT NULL AUTO_INCREMENT, \`default_max_referrals\` int NOT NULL DEFAULT '10', \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`referral_policies\` (\`id\` int NOT NULL AUTO_INCREMENT, \`scope\` enum ('global', 'plan', 'product_type', 'product') NOT NULL, \`product_type\` enum ('course', 'bundle', 'event') NULL, \`product_id\` bigint NULL, \`first_month_user_pct\` decimal(5,2) NOT NULL DEFAULT '90.00', \`next_months_user_pct\` decimal(5,2) NOT NULL DEFAULT '10.00', \`include_events\` tinyint NOT NULL DEFAULT '0', \`active\` tinyint NOT NULL DEFAULT '1', \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`plan_id\` int NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
-        await queryRunner.query(`CREATE TABLE \`referral_slots\` (\`user_id\` int NOT NULL, \`max_slots\` int NOT NULL, PRIMARY KEY (\`user_id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`referral_slots\` (\`id\` int NOT NULL AUTO_INCREMENT, \`max_slots\` int NOT NULL, \`user_id\` int NULL, UNIQUE INDEX \`IDX_18868039aafdf61ca710363604\` (\`user_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`roles\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(50) NOT NULL, \`description\` varchar(255) NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), UNIQUE INDEX \`IDX_648e3f5447f725579d7d4ffdfb\` (\`name\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`users\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(150) NOT NULL, \`email\` varchar(150) NOT NULL, \`password\` varchar(255) NOT NULL, \`avatar\` varchar(255) NULL, \`is_active\` tinyint NOT NULL DEFAULT '1', \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), UNIQUE INDEX \`IDX_97672ac88f789774dd47f7c8be\` (\`email\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
-        await queryRunner.query(`CREATE TABLE \`user_notification_settings\` (\`user_id\` int NOT NULL, \`email_enabled\` tinyint NOT NULL DEFAULT '1', \`push_enabled\` tinyint NOT NULL DEFAULT '0', \`notify_expiring_subscription\` tinyint NOT NULL DEFAULT '1', PRIMARY KEY (\`user_id\`)) ENGINE=InnoDB`);
-        await queryRunner.query(`CREATE TABLE \`user_roles\` (\`user_id\` int NOT NULL, \`role_id\` int NOT NULL, PRIMARY KEY (\`user_id\`, \`role_id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`user_notification_settings\` (\`id\` int NOT NULL AUTO_INCREMENT, \`email_enabled\` tinyint NOT NULL DEFAULT '1', \`push_enabled\` tinyint NOT NULL DEFAULT '0', \`notify_expiring_subscription\` tinyint NOT NULL DEFAULT '1', \`user_id\` int NULL, UNIQUE INDEX \`IDX_52182ffd0f785e8256f8fcb4fd\` (\`user_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`user_roles\` (\`id\` int NOT NULL AUTO_INCREMENT, \`user_id\` int NULL, \`role_id\` int NULL, UNIQUE INDEX \`IDX_23ed6f04fe43066df08379fd03\` (\`user_id\`, \`role_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`ALTER TABLE \`bundles\` ADD CONSTRAINT \`FK_956309564537c5fc5716a5cc89f\` FOREIGN KEY (\`created_by\`) REFERENCES \`users\`(\`id\`) ON DELETE SET NULL ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`bundle_items\` ADD CONSTRAINT \`FK_204a2f0fd03ca0efbf9db586b7f\` FOREIGN KEY (\`bundle_id\`) REFERENCES \`bundles\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`bundle_items\` ADD CONSTRAINT \`FK_cdd093e240b43e4254c54ab4e76\` FOREIGN KEY (\`school_id\`) REFERENCES \`schools\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`);
@@ -100,12 +100,15 @@ export class InitSchema1761508709374 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE \`bundle_items\` DROP FOREIGN KEY \`FK_cdd093e240b43e4254c54ab4e76\``);
         await queryRunner.query(`ALTER TABLE \`bundle_items\` DROP FOREIGN KEY \`FK_204a2f0fd03ca0efbf9db586b7f\``);
         await queryRunner.query(`ALTER TABLE \`bundles\` DROP FOREIGN KEY \`FK_956309564537c5fc5716a5cc89f\``);
+        await queryRunner.query(`DROP INDEX \`IDX_23ed6f04fe43066df08379fd03\` ON \`user_roles\``);
         await queryRunner.query(`DROP TABLE \`user_roles\``);
+        await queryRunner.query(`DROP INDEX \`IDX_52182ffd0f785e8256f8fcb4fd\` ON \`user_notification_settings\``);
         await queryRunner.query(`DROP TABLE \`user_notification_settings\``);
         await queryRunner.query(`DROP INDEX \`IDX_97672ac88f789774dd47f7c8be\` ON \`users\``);
         await queryRunner.query(`DROP TABLE \`users\``);
         await queryRunner.query(`DROP INDEX \`IDX_648e3f5447f725579d7d4ffdfb\` ON \`roles\``);
         await queryRunner.query(`DROP TABLE \`roles\``);
+        await queryRunner.query(`DROP INDEX \`IDX_18868039aafdf61ca710363604\` ON \`referral_slots\``);
         await queryRunner.query(`DROP TABLE \`referral_slots\``);
         await queryRunner.query(`DROP TABLE \`referral_policies\``);
         await queryRunner.query(`DROP TABLE \`referral_configs\``);

@@ -1,0 +1,102 @@
+<div
+  style="
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 40px 30px;
+    color: #2c3e50;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+  "
+>
+  <!-- Logo -->
+  <div style='margin-bottom: 30px;'>
+    <img src='{{logo}}' alt='Logo' style='max-width: 150px; height: auto;' />
+  </div>
+
+  <h2
+    style='
+      color: #2f80ed;
+      border-bottom: 1px solid #e6ecf0;
+      padding-bottom: 12px;
+      font-size: 24px;
+      margin-bottom: 24px;
+      display: inline-block;
+    '
+  >
+    Nuevo inicio de sesión detectado
+  </h2>
+
+  <p style='font-size: 16px; margin: 20px 0;'>Hola {{username}},</p>
+
+  <p style='font-size: 16px; line-height: 1.6;'>
+    Detectamos un nuevo inicio de sesión en tu cuenta de
+    <strong>{{website}}</strong>.
+  </p>
+
+  <div
+    style='
+      background-color: #f0f4f8;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #d0d7de;
+      margin: 30px 0;
+      font-size: 14px;
+      color: #34495e;
+      text-align: left;
+      display: inline-block;
+      max-width: 400px;
+    '
+  >
+    <p><strong>Fecha:</strong> {{loginDate}}</p>
+    <p><strong>Ubicación:</strong> ----</p>
+    <p><strong>Dispositivo:</strong> ----</p>
+  </div>
+
+  <p style='color: #7f8c8d; font-size: 14px; margin: 20px 0;'>
+    Si fuiste tú, no necesitas hacer nada.<br />
+    Si no reconoces esta actividad, te recomendamos cambiar tu contraseña
+    inmediatamente.
+  </p>
+
+  <div style='margin: 30px 0;'>
+    <a
+      href='{{website}}'
+      style='
+        display: inline-block;
+        padding: 14px 32px;
+        background-color: #e63946;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+      '
+    >
+      Proteger mi cuenta
+    </a>
+  </div>
+
+  <div
+    style='
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e6ecf0;
+      font-size: 12px;
+      color: #b0b0b0;
+    '
+  >
+    <p>
+      Recibes este correo por tu cuenta en
+      <strong>{{website}}</strong><br />
+      <a href='#' style='color: #2f80ed; text-decoration: none;'>Gestionar
+        notificaciones</a>
+      ·
+      <a href='#' style='color: #2f80ed; text-decoration: none;'>Ayuda</a>
+    </p>
+  </div>
+</div>

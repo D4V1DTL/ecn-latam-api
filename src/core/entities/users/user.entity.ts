@@ -59,4 +59,7 @@ export class User extends BaseEntity {
 
     @OneToMany(() => require('../notifications/notification.entity.js').Notification, (n: any) => n.user)
     notifications!: any[];
+
+    @OneToMany(() => require('./user-session.entity.js').UserSession, (userSession: any) => userSession.user)
+    userSession!: any[];
 }

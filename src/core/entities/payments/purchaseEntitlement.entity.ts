@@ -1,6 +1,7 @@
 import {
     BaseEntity,
     Column,
+    CreateDateColumn,
     Entity,
     JoinColumn,
     ManyToOne,
@@ -39,4 +40,7 @@ export class PurchaseEntitlement extends BaseEntity {
 
     @Column({ name: 'end_date', type: 'date', nullable: true })
     endDate?: Date;
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt!: Date;
 }
